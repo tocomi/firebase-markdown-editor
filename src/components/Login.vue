@@ -1,6 +1,6 @@
 <template>
   <div id="login">
-    <button>Login Google Account</button>
+    <button @click="loginGoogle">Login Google Account</button>
   </div>
 </template>
 
@@ -10,6 +10,11 @@ export default {
   data() {
     return {
       
+    }
+  },
+  methods: {
+    loginGoogle() {
+      firebase.auth().signInWithRedirect(new firebase.auth.GoogleAuthProvider())
     }
   }
 }
