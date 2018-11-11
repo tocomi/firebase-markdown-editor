@@ -3,11 +3,12 @@
     <h1>Markdown Editor</h1>
     <span>{{ user.displayName }}</span>
     <button @click="logout">Logout</button>
-    <div class="editorWrapper">
+    <h3 v-if="nowLoading">Now Loading...</h3>
+    <div v-if="!nowLoading" class="editorWrapper">
       <textarea class="markdown" v-model="memos[0].markdown"></textarea>
       <div class="preview" v-html="preview()"></div>
     </div>
-    <button class="saveMemosBtn" @click="saveMemos">Save</button>
+    <button v-if="!nowLoading" class="saveMemosBtn" @click="saveMemos">Save</button>
   </div>
 </template>
 
@@ -22,14 +23,17 @@ export default {
         {
           markdown: "",
         }
-      ]
+      ],
+      nowLoading: false,
     }
   },
   created() {
+    this.nowLoading = true
     firebase.database().ref("memos/" + this.user.uid).once("value").then(result => {
       if (result.val()) {
         this.memos = result.val()
       }
+      this.nowLoading = false
     })
   },
   methods: {

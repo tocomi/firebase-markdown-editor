@@ -1,7 +1,8 @@
 <template>
   <div class="markdown">
     <Editor v-if="isLogin" :user="userData"></Editor>
-    <Login v-if="!isLogin"></Login>
+    <Login v-if="!isLogin && !nowLoading"></Login>
+    <span v-if="nowLoading">Now Loading...</span>
   </div>
 </template>
 
@@ -15,11 +16,12 @@ export default {
     return {
       isLogin: false,
       userData: null,
+      nowLoading: false,
     }
   },
   created() {
+    this.nowLoading = true
     firebase.auth().onAuthStateChanged(user => {
-      console.log(user)
       if (user) {
         this.isLogin = true
         this.userData = user
@@ -27,6 +29,7 @@ export default {
         this.isLogin = false
         this.userData = null
       }
+      this.nowLoading = false
     })
   },
   components: {
