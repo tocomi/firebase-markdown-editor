@@ -4,7 +4,7 @@
     <span>{{ user.displayName }}</span>
     <button @click="logout">Logout</button>
     <div class="editorWrapper">
-      <textarea class="markdown" v-model="markdown"></textarea>
+      <textarea class="markdown" v-model="memos[0].markdown"></textarea>
       <div class="preview" v-html="preview()"></div>
     </div>
   </div>
@@ -17,7 +17,11 @@ export default {
   props: [ "user" ],
   data() {
     return {
-      markdown: "",
+      memos: [
+        {
+          markdown: "",
+        }
+      ]
     }
   },
   methods: {
@@ -25,7 +29,7 @@ export default {
       firebase.auth().signOut()
     },
     preview() {
-      return marked(this.markdown)
+      return marked(this.memos[0].markdown)
     }
   }
 }
