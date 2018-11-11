@@ -7,6 +7,7 @@
       <textarea class="markdown" v-model="memos[0].markdown"></textarea>
       <div class="preview" v-html="preview()"></div>
     </div>
+    <button class="saveMemosBtn" @click="saveMemos">Save</button>
   </div>
 </template>
 
@@ -24,12 +25,22 @@ export default {
       ]
     }
   },
+  created() {
+    firebase.database().ref("memos/" + this.user.uid).once("value").then(result => {
+      if (result.val()) {
+        this.memos = result.val()
+      }
+    })
+  },
   methods: {
     logout() {
       firebase.auth().signOut()
     },
     preview() {
       return marked(this.memos[0].markdown)
+    },
+    saveMemos() {
+      firebase.database().ref("memos/" + this.user.uid).set(this.memos)
     }
   }
 }
